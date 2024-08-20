@@ -21,12 +21,71 @@ android {
         }
     }
 
-    buildTypes {
+    signingConfigs {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            try {
+                storeFile file("./keystore/hcc.jks")
+                storePassword "HC2019"
+                keyAlias "hcc"
+                keyPassword "HC2019"
+            } catch (ex) {
+                throw new InvalidUserDataException(ex.toString())
+            }
+        }
+        //test
+        debug {
+            try {
+                storeFile file("./keystore/hcc.jks")
+                storePassword "HC2019"
+                keyAlias "hcc"
+                keyPassword "HC2019"
+            } catch (ex) {
+                throw new InvalidUserDataException(ex.toString())
+            }
         }
     }
+
+
+
+
+    buildTypes {
+        release {
+            //   minifyEnabled true
+            signingConfig signingConfigs.release
+            //  proguardFiles getDefaultProguardFile('proguard-android.txt'), project.file('proguard-rules.pro')
+
+            // 混淆开关
+            minifyEnabled false
+            // 是否zip对齐
+            zipAlignEnabled true
+            // 移除无用的resource文件
+            shrinkResources false
+            // 是否打开debuggable开关
+            debuggable false
+            // 是否打开jniDebuggable开关
+            jniDebuggable false
+            // 混淆配置文件
+            proguardFile 'proguard-rules.pro'
+        }
+        debug {
+            buildConfigField "long", "APP_BUILD_TIME", System.currentTimeMillis() + "L"
+
+            minifyEnabled false
+            // 是否zip对齐
+            zipAlignEnabled false
+            // 移除无用的resource文件
+            shrinkResources false
+            // 是否打开debuggable开关
+            debuggable true
+            // 是否打开jniDebuggable开关
+            jniDebuggable true
+            // 混淆配置文件
+            proguardFile 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+
+        }
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8

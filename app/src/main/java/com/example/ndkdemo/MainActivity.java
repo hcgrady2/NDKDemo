@@ -72,8 +72,24 @@ public class MainActivity extends AppCompatActivity {
         binding.btnTestNative.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                long allocatedMemory = testNativeHeap();
-                Log.d("C_TAG", "onClick:  java 层收到的已经分配的大小:" + allocatedMemory);
+                new Thread(
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                long allocatedMemory = testNativeHeap();
+                                Log.i("C_TAG", "onClick:  java 层收到的已经分配的大小:" + allocatedMemory);
+                                System.out.printf("C_TAG:" + "onClick:  java 层收到的已经分配的大小:" + allocatedMemory);
+                                binding.tvNativeSize.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        binding.tvNativeSize.setText("大小:" + allocatedMemory);
+
+                                    }
+                                });
+                            }
+                        }
+                ).start();
+
             }
         });
 

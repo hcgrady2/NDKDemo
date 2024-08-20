@@ -183,12 +183,12 @@ Java_com_example_ndkdemo_MainActivity_testNativeHeap(JNIEnv *env, jobject /* thi
         chunk = malloc(chunk_size);
         if (chunk == nullptr) {
             // 分配失败，表示到达限制
-            LOGD("Failed to allocate more memory. Total allocated: %zu MB", allocated_memory);
+            LOGI("Failed to allocate more memory. Total allocated: %zu MB", allocated_memory);
             break;
         }
         allocated_memory += 2; // 增加 1 MB
     }
 
-    LOGD("Total native heap allocated: %zu MB", allocated_memory);
+    LOGI("Total native heap allocated: %zu MB", allocated_memory);
     return allocated_memory;
 }

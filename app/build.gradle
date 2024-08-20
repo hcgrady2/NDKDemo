@@ -10,8 +10,8 @@ android {
         applicationId "com.example.ndkdemo"
         minSdkVersion 16
         targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "2.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
@@ -55,7 +55,7 @@ android {
             //  proguardFiles getDefaultProguardFile('proguard-android.txt'), project.file('proguard-rules.pro')
 
             // 混淆开关
-            minifyEnabled false
+            minifyEnabled true
             // 是否zip对齐
             zipAlignEnabled true
             // 移除无用的resource文件
@@ -70,7 +70,7 @@ android {
         debug {
             buildConfigField "long", "APP_BUILD_TIME", System.currentTimeMillis() + "L"
 
-            minifyEnabled false
+            minifyEnabled true
             // 是否zip对齐
             zipAlignEnabled false
             // 移除无用的resource文件

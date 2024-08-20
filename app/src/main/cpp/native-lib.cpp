@@ -10,7 +10,7 @@
 
 extern "C" JNIEXPORT jstring JNICALL
 Java_com_example_ndkdemo_MainActivity_stringFromJNI(
-        JNIEnv* env,
+        JNIEnv *env,
         jobject /* this */) {
     std::string hello = "Hello from C++";
     return env->NewStringUTF(hello.c_str());
@@ -114,7 +114,8 @@ Java_com_example_ndkdemo_MainActivity_callStaticMethod(JNIEnv *env, jobject thiz
     //1. 从classpath路径下搜索MyJNIClass这个类,并返回该类的Class对象
     jclass clazz = env->FindClass("com/example/ndkdemo/MyJNIClass");
     //2. 从clazz类中查找getDes方法 得到这个静态方法的方法id
-    jmethodID mid_get_des = env->GetStaticMethodID(clazz, "getDes", "(Ljava/lang/String;)Ljava/lang/String;");
+    jmethodID mid_get_des = env->GetStaticMethodID(clazz, "getDes",
+                                                   "(Ljava/lang/String;)Ljava/lang/String;");
     //3. 构建入参,调用static方法,获取返回值
     jstring str_arg = env->NewStringUTF("我是 c++，我要调用 java static method");
     jstring result = (jstring) env->CallStaticObjectMethod(clazz, mid_get_des, str_arg);
@@ -158,7 +159,6 @@ void willCrash() {
 }
 
 
-
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_example_ndkdemo_MainActivity_testNativeCrash(JNIEnv *env, jobject thiz) {
@@ -166,4 +166,29 @@ Java_com_example_ndkdemo_MainActivity_testNativeCrash(JNIEnv *env, jobject thiz)
     willCrash();
     //后面的代码是执行不到的,因为崩溃了
     LOGI("崩溃后");
-    printf("oooo");}
+    printf("oooo");
+}
+
+
+
+
+extern "C"
+JNIEXPORT jlong JNICALL
+Java_com_example_ndkdemo_MainActivity_testNativeHeap(JNIEnv *env, jobject /* this */) {
+    const size_t chunk_size = 2*1024 * 1024; // 每次分配 50 MB
+    size_t allocated_memory = 0;
+    void* chunk;
+
+    while (true) {
+        chunk = malloc(chunk_size);
+        if (chunk == nullptr) {
+            // 分配失败，表示到达限制
+            LOGD("Failed to allocate more memory. Total allocated: %zu MB", allocated_memory);
+            break;
+        }
+        allocated_memory += 2; // 增加 1 MB
+    }
+
+    LOGD("Total native heap allocated: %zu MB", allocated_memory);
+    return allocated_memory;
+}

@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import com.example.ndkdemo.databinding.ActivityMainBinding;
@@ -65,10 +66,21 @@ public class MainActivity extends AppCompatActivity {
 
         callAndCreateIntanceMethod();
 
-        testNativeCrash();
+        //testNativeCrash();
+
+
+        binding.btnTestNative.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                long allocatedMemory = testNativeHeap();
+                Log.d("C_TAG", "onClick:  java 层收到的已经分配的大小:" + allocatedMemory);
+            }
+        });
 
     }
 
+    // 声明 JNI 方法
+    public native long testNativeHeap();
     /**
      * A native method that is implemented by the 'native-lib' native library,
      * which is packaged with this application.

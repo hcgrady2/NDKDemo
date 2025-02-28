@@ -27,71 +27,14 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Example of a call to a native method
-        TextView tv = binding.sampleText;
-        tv.setText(stringFromJNI());
-
-
-        String result = operateString("待操作的字符串");
-        binding.operateStr.setText(result);
-
-
-        try {
-
-            int array[] = new int[]{1,2,3,4,5};
-            int sum  = sumArray(array);
-
-            Log.i(TAG, "onCreate: sum :" + sum);
-
-            binding.tvSum.setText(String.valueOf(sum));
-        }catch (Exception e){
-
-            Log.i(TAG, "onCreate: exception:" + e.toString());
-        }
-
-
-
-        //交给native层创建->Java打印输出
-        int[][] init2DArray = init2DArray(3);
-        for (int i = 0; i < 3; i++) {
-            for (int i1 = 0; i1 < 3; i1++) {
-                Log.i(TAG, "init2DArray[" + i + "][" + i1 + "]" + " = " + init2DArray[i][i1]);
-            }
-        }
-
-
-        String tvStatic = callStaticMethod("这里是入参数");
-        binding.tvStaticMethod.setText(tvStatic);
-
-
-        callAndCreateIntanceMethod();
-
-        //testNativeCrash();
-
 
         binding.btnTestNative.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new Thread(
-                        new Runnable() {
-                            @Override
-                            public void run() {
-                                long allocatedMemory = testNativeHeap();
-                                Log.i("C_TAG", "onClick:  java 层收到的已经分配的大小:" + allocatedMemory);
-                                System.out.printf("C_TAG:" + "onClick:  java 层收到的已经分配的大小:" + allocatedMemory);
-                                binding.tvNativeSize.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        binding.tvNativeSize.setText("大小:" + allocatedMemory);
-
-                                    }
-                                });
-                            }
-                        }
-                ).start();
-
+                binding.sampleText.setText(stringFromJNI());
             }
         });
+
 
     }
 

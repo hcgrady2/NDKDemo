@@ -1,6 +1,7 @@
 #include <jni.h>
 #include <string>
 #include <android/log.h>
+#include <chrono>
 
 
 //#define LOG_TAG _CTagHead(__FILE__,__func__)
@@ -12,8 +13,24 @@ extern "C" JNIEXPORT jstring JNICALL
 Java_com_example_ndkdemo_MainActivity_stringFromJNI(
         JNIEnv *env,
         jobject /* this */) {
-    std::string hello = "Hello from C++";
-    return env->NewStringUTF(hello.c_str());
+
+
+    // 使用高精度计时器来测量运行时间
+    auto start = std::chrono::high_resolution_clock::now();
+
+    // 模拟一个计算密集型任务：大量的浮点运算
+    volatile double result = 0.0;
+    for (int i = 0; i < 100000000; ++i) {
+        result += (i * 0.123456789) / (i + 1);
+    }
+
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> duration = end - start;
+
+    // 将运行时间返回给 Java 层
+    std::string resultStr = "Time taken: " + std::to_string(duration.count()) + " seconds";
+    return env->NewStringUTF(resultStr.c_str());
+
 }
 
 extern "C"
